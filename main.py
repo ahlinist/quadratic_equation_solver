@@ -2,10 +2,10 @@ import csv
 import pandas as pd
 from neural_network import NeuralNetwork
 
-EPOCHS_NUMBER = 3
+EPOCHS_NUMBER = 30
 
 def main():
-    network = NeuralNetwork(inputs=3, layers=[3, 8, 8, 4], activation_function='relu')
+    network = NeuralNetwork(inputs=3, layers=[3, 8, 8, 4], activation_function='sigmoid', eta=0.01)
 
     with open('dataset.csv', mode='r') as file:
         df = pd.read_csv(file)
@@ -42,9 +42,9 @@ def main():
 
     print('Solve equation:')
     roots = network.run([
-        normalize(1, 'a', min_values, max_values),
-        normalize(2, 'b', min_values, max_values),
-        normalize(3, 'c', min_values, max_values)
+        normalize(2, 'a', min_values, max_values),
+        normalize(3, 'b', min_values, max_values),
+        normalize(1, 'c', min_values, max_values)
     ])
     print(denormalize(roots[0], 'x1', min_values, max_values))
     print(denormalize(roots[1], 'x2', min_values, max_values))

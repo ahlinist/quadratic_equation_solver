@@ -2,9 +2,9 @@ import random
 import math
 import csv
 
-DATASET_SIZE = 10000
-MIN_VALUE=-100.0
-MAX_VALUE=100.0
+DATASET_SIZE = 1000
+MIN_VALUE=-10.0
+MAX_VALUE=10.0
 
 with open(r'dataset.csv', 'w', newline='') as csvfile:
     csvfile.truncate()

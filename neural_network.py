@@ -4,11 +4,11 @@ import numpy as np
 class Perceptron:
     def __init__(self, inputs, activation_function, bias=1.0):
         # random init
-        #self.weights = (np.random.rand(inputs + 1) * 2) - 1
+        self.weights = (np.random.rand(inputs + 1) * 2) - 1
 
         # Xavier initialization for sigmoid
-        limit = np.sqrt(6 / (inputs + 1))
-        self.weights = np.random.uniform(-limit, limit, inputs + 1)
+        #limit = np.sqrt(6 / (inputs + 1))
+        #self.weights = np.random.uniform(-limit, limit, inputs + 1)
         self.bias = bias
         self.activation_function = activation_function
 
@@ -21,7 +21,7 @@ class Perceptron:
 
 
 class NeuralNetwork:
-    def __init__(self, inputs, layers, activation_function='relu', eta=0.1, bias=1.0):
+    def __init__(self, inputs, layers, activation_function='relu', eta=0.01, bias=1.0):
         self.layers = layers
         self.network = []
         self.values = []
@@ -35,6 +35,8 @@ class NeuralNetwork:
                 self.activation_function = NeuralNetwork.SigmoidActivationFunction()
             case 'relu':
                 self.activation_function = NeuralNetwork.ReLUActivationFunction()
+            case 'tanh':
+                self.activation_function = NeuralNetwork.TanhActivationFunction()
 
         for layer in range(len(self.layers)):
             self.values.append([])
@@ -124,3 +126,10 @@ class NeuralNetwork:
 
         def derivative(self, x):
             return np.where(x > 0, 1, 0)
+
+    class TanhActivationFunction(ActivationFunction):
+        def map(self, x):
+            return (np.exp(x) - np.exp(-x))/(np.exp(x) + np.exp(-x))
+
+        def derivative(self, x):
+            return 1 - ((np.exp(x) - np.exp(-x))/(np.exp(x) + np.exp(-x))) ** 2
