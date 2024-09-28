@@ -2,10 +2,10 @@ import csv
 import pandas as pd
 from neural_network import NeuralNetwork
 
-EPOCHS_NUMBER = 300
+EPOCHS_NUMBER = 3
 
 def main():
-    network = NeuralNetwork(inputs=3, layers=[3, 16, 16, 4], activation_function='relu')
+    network = NeuralNetwork(inputs=3, layers=[3, 8, 8, 4], activation_function='relu')
 
     with open('dataset.csv', mode='r') as file:
         df = pd.read_csv(file)
@@ -14,14 +14,12 @@ def main():
     min_values = df.min()
     max_values = df.max()
 
-    with open('dataset.csv', mode='r') as file:
-        reader = csv.reader(file)
-        header = next(reader)  # Skip the header row
-        row_number = 0
-
-        for epoch in range(EPOCHS_NUMBER):
-            mse = 0.0
-
+    for epoch in range(EPOCHS_NUMBER):
+        mse = 0.0
+        with open('dataset.csv', mode='r') as file:
+            reader = csv.reader(file)
+            header = next(reader)  # Skip the header row
+            row_number = 0
             for row in reader:
                 row_number += 1
                 mse += network.propagate_back(
@@ -36,9 +34,9 @@ def main():
                         normalize(float(row[5]), 'x3', min_values, max_values),
                         normalize(float(row[6]), 'x4', min_values, max_values),
                     ]
-                )/row_count
-            if epoch % 100 == 0:
-                print(mse)
+                ) / row_count
+        if epoch % 1 == 0:
+            print(mse)
 
     network.print_weights()
 

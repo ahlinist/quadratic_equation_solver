@@ -21,7 +21,7 @@ class Perceptron:
 
 
 class NeuralNetwork:
-    def __init__(self, inputs, layers, activation_function='relu', eta=0.01, bias=1.0):
+    def __init__(self, inputs, layers, activation_function='relu', eta=0.1, bias=1.0):
         self.layers = layers
         self.network = []
         self.values = []
