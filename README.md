@@ -14,4 +14,11 @@ python result_predictor.py <b> <c>
 python result_predictor.py 3 1
 ```
 
+## required libs
+
+```
+- pandas
+- numpy
+```
+
 it is assumed that the dataset is normalized with respect to a, so the equations stick to the following format: x^2+bx+c=0  
