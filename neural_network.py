@@ -2,13 +2,21 @@ import numpy as np
 
 
 class Perceptron:
+    """
+    The neuron itself.
+    There are several activation functions available along with their derivatives for error calculation.
+    """
     def __init__(self, inputs, activation_function, bias=1.0):
         # random init
         #self.weights = (np.random.rand(inputs + 1) * 2) - 1
 
         # Xavier initialization for sigmoid
-        limit = np.sqrt(6 / (inputs + 1))
-        self.weights = np.random.uniform(-limit, limit, inputs + 1)
+        #limit = np.sqrt(6 / (inputs + 1))
+        #self.weights = np.random.uniform(-limit, limit, inputs + 1)
+
+        #He initialization
+        stddev = np.sqrt( 2 / inputs + 1 )
+        self.weights = np.random.randn(inputs + 1) * stddev
         self.bias = bias
         self.activation_function = activation_function
 
@@ -21,6 +29,11 @@ class Perceptron:
 
 
 class NeuralNetwork:
+    """
+    A network which consists of neurons.
+    @layers is a matrix of integers which represents the network structure.
+    @network is a matrix of perceptrons
+    """
     def __init__(self, inputs, layers, activation_function='relu', eta=0.01, bias=1.0):
         self.layers = layers
         self.network = []
