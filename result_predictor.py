@@ -1,12 +1,19 @@
 import json
+import argparse
 from neural_network import NeuralNetwork
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Process two integers')
+    parser.add_argument('b', type=int, help='coefficient b')
+    parser.add_argument('c', type=int, help='coefficient c')
+    args = parser.parse_args()
+    b = args.b
+    c = args.c
+
     with open('network.json', 'r') as file:
         data = json.load(file)
 
-    print(data)
     metadata = data['metadata']
     min_values = metadata['min_values']
     max_values = metadata['max_values']
@@ -25,8 +32,8 @@ def main():
 
     print('Solve equation:')
     roots = network.run([
-        normalize(3, 'b', min_values, max_values),
-        normalize(1, 'c', min_values, max_values)
+        normalize(b, 'b', min_values, max_values),
+        normalize(c, 'c', min_values, max_values)
     ])
     print(denormalize(roots[0], 'x1', min_values, max_values))
     print(denormalize(roots[1], 'x2', min_values, max_values))

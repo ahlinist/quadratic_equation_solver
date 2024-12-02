@@ -3,7 +3,7 @@ import pandas as pd
 from neural_network import NeuralNetwork
 import json
 
-EPOCHS_NUMBER = 10
+EPOCHS_NUMBER = 5
 
 def main():
     inputs = 2
