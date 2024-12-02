@@ -8,4 +8,10 @@ python network_trainer.py
 python result_predictor.py <b> <c> 
 ```
 
-it is assumed that the dataset is normalized with respect to a, so the equations stick to the following format: x^2+bx+c=0
+## example
+
+```
+python result_predictor.py 3 1
+```
+
+it is assumed that the dataset is normalized with respect to a, so the equations stick to the following format: x^2+bx+c=0  
