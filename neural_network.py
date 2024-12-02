@@ -4,11 +4,11 @@ import numpy as np
 class Perceptron:
     def __init__(self, inputs, activation_function, bias=1.0):
         # random init
-        self.weights = (np.random.rand(inputs + 1) * 2) - 1
+        #self.weights = (np.random.rand(inputs + 1) * 2) - 1
 
         # Xavier initialization for sigmoid
-        #limit = np.sqrt(6 / (inputs + 1))
-        #self.weights = np.random.uniform(-limit, limit, inputs + 1)
+        limit = np.sqrt(6 / (inputs + 1))
+        self.weights = np.random.uniform(-limit, limit, inputs + 1)
         self.bias = bias
         self.activation_function = activation_function
 
