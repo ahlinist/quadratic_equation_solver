@@ -1,11 +1,15 @@
 import csv
 import pandas as pd
 from neural_network import NeuralNetwork
+import json
 
-EPOCHS_NUMBER = 5
+EPOCHS_NUMBER = 10
 
 def main():
-    network = NeuralNetwork(inputs=2, layers=[10, 2], activation_function='relu', eta=0.01, bias=1)
+    inputs = 2
+    layers = [10, 2]
+    activation_function = 'relu'
+    network = NeuralNetwork(inputs=inputs, layers=layers, activation_function=activation_function)
 
     with open('dataset.csv', mode='r') as file:
         df = pd.read_csv(file)
@@ -37,23 +41,23 @@ def main():
 
     network.print_weights()
 
-    print('Solve equation:')
-    roots = network.run([
-        normalize(3, 'b', min_values, max_values),
-        normalize(1, 'c', min_values, max_values)
-    ])
-    print(denormalize(roots[0], 'x1', min_values, max_values))
-    print(denormalize(roots[1], 'x2', min_values, max_values))
+    data = {
+        "metadata": {"inputs": inputs, "layers": layers,"activation_function": activation_function,
+                     "min_values": min_values.to_dict(), "max_values": max_values.to_dict()},
+        "weights": build_weight_matrix(network.network),
+    }
+
+    # Write the dictionary to a JSON file
+    with open('network.json', 'w') as outfile:
+        json.dump(data, outfile, indent=4)
+
+def build_weight_matrix(network):
+    return [[perceptron.weights.tolist() for perceptron in layer] for layer in network]
 
 def normalize(value, label, mins, maxes):
     min_value = mins[label]
     max_value = maxes[label]
     return (value - min_value)/(max_value - min_value)
-
-def denormalize(value, label, mins, maxes):
-    min_value = mins[label]
-    max_value = maxes[label]
-    return (value * (max_value - min_value)) + min_value
 
 if __name__ == '__main__':
     main()
