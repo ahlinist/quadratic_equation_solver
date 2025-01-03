@@ -9,9 +9,9 @@ MAX_VALUE=10.0
 def main():
     with open(r'dataset.csv', 'w', newline='') as csvfile:
         csvfile.truncate()
-        fieldnames = ['b', 'c', 'x1', 'x2']
+        fieldnames = ['i1', 'i2', 'o1', 'o2']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writerow({'b': 'b', 'c': 'c', 'x1': 'x1', 'x2': 'x2'})
+        writer.writerow({'i1': 'i1', 'i2': 'i2', 'o1': 'o1', 'o2': 'o2'})
 
     entries_generated = 0
 
@@ -27,9 +27,9 @@ def main():
         else:
             continue
         with open(r'dataset.csv', 'a', newline='') as csvfile:
-            fieldnames = ['b', 'c', 'x1', 'x2']
+            fieldnames = ['i1', 'i2', 'o1', 'o2']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writerow({'b': b, 'c': c, 'x1': x1, 'x2': x2})
+            writer.writerow({'i1': b, 'i2': c, 'o1': x1, 'o2': x2})
         entries_generated += 1
 
 if __name__ == '__main__':

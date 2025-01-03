@@ -4,39 +4,43 @@ from neural_network import NeuralNetwork
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Process two integers')
-    parser.add_argument('b', type=int, help='coefficient b')
-    parser.add_argument('c', type=int, help='coefficient c')
-    args = parser.parse_args()
-    b = args.b
-    c = args.c
-
     with open('network.json', 'r') as file:
         data = json.load(file)
 
     metadata = data['metadata']
+    input_labels = metadata['input_labels']
+    output_labels = metadata['output_labels']
+
+    parser = argparse.ArgumentParser(description='Process two integers')
+    for label in input_labels:
+        parser.add_argument(label, type=int, help='coefficient ' + label)
+
+    cli_args = parser.parse_args()
+
     min_values = metadata['min_values']
     max_values = metadata['max_values']
-    inputs = metadata['inputs']
     layers = metadata['layers']
     activation_function = metadata['activation_function']
     weights = data['weights']
 
-    network = NeuralNetwork(inputs=inputs, layers=layers, activation_function=activation_function)
+    network = NeuralNetwork(inputs=len(input_labels), layers=layers, activation_function=activation_function)
 
     for i, layer in enumerate(network.network):
         for j, perceptron in enumerate(layer):
             perceptron.weights = weights[i][j]
 
-    network.print_weights()
+    normalized_inputs = []
+
+    for input_label in input_labels:
+        normalized_inputs.append(
+            normalize(getattr(cli_args, input_label), input_label, min_values, max_values)
+        )
 
     print('Solve equation:')
-    roots = network.run([
-        normalize(b, 'b', min_values, max_values),
-        normalize(c, 'c', min_values, max_values)
-    ])
-    print(denormalize(roots[0], 'x1', min_values, max_values))
-    print(denormalize(roots[1], 'x2', min_values, max_values))
+    roots = network.run(normalized_inputs)
+
+    for i, output_label in enumerate(output_labels):
+        print(denormalize(roots[i], output_label, min_values, max_values))
 
 def normalize(value, label, mins, maxes):
     min_value = mins[label]

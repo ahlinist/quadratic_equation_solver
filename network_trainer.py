@@ -6,17 +6,21 @@ import json
 EPOCHS_NUMBER = 5
 
 def main():
-    inputs = 2
-    layers = [10, 2]
-    activation_function = 'relu'
-    network = NeuralNetwork(inputs=inputs, layers=layers, activation_function=activation_function)
-
     with open('dataset.csv', mode='r') as file:
         df = pd.read_csv(file)
 
     row_count = len(df)
+    #TODO: define mins and maxes for every row
     min_values = df.min()
     max_values = df.max()
+
+    header = df.columns.tolist()
+    input_labels = [col for col in header if col.startswith('i')]
+    output_labels = [col for col in header if col.startswith('o')]
+
+    layers = [10, len(output_labels)]
+    activation_function = 'relu'
+    network = NeuralNetwork(inputs=len(input_labels), layers=layers, activation_function=activation_function)
 
     for epoch in range(EPOCHS_NUMBER):
         mse = 0.0
@@ -28,12 +32,12 @@ def main():
                 row_number += 1
                 mse += network.propagate_back(
                     [
-                        normalize(float(row[0]), 'b', min_values, max_values),
-                        normalize(float(row[1]), 'c', min_values, max_values),
+                        normalize(float(row[0]), 'i1', min_values, max_values),
+                        normalize(float(row[1]), 'i2', min_values, max_values),
                     ],
                     [
-                        normalize(float(row[2]), 'x1', min_values, max_values),
-                        normalize(float(row[3]), 'x2', min_values, max_values),
+                        normalize(float(row[2]), 'o1', min_values, max_values),
+                        normalize(float(row[3]), 'o2', min_values, max_values),
                     ]
                 ) / row_count
         if epoch % 1 == 0:
@@ -42,9 +46,10 @@ def main():
     network.print_weights()
 
     data = {
-        "metadata": {"inputs": inputs, "layers": layers,"activation_function": activation_function,
-                     "min_values": min_values.to_dict(), "max_values": max_values.to_dict()},
-        "weights": build_weight_matrix(network.network),
+        "metadata": {
+            "input_labels": input_labels, "output_labels": output_labels,"layers": layers,
+            "activation_function": activation_function, "min_values": min_values.to_dict(),
+            "max_values": max_values.to_dict()}, "weights": build_weight_matrix(network.network),
     }
 
     # Write the dictionary to a JSON file
