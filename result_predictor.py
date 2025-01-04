@@ -13,7 +13,7 @@ def main():
 
     parser = argparse.ArgumentParser(description='Process two integers')
     for label in input_labels:
-        parser.add_argument(label, type=int, help='coefficient ' + label)
+        parser.add_argument(label, type=float, help='coefficient ' + label)
 
     cli_args = parser.parse_args()
 
