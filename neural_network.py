@@ -8,15 +8,16 @@ class Perceptron:
     """
     def __init__(self, inputs, activation_function, bias=1.0):
         # random init
-        #self.weights = (np.random.rand(inputs + 1) * 2) - 1
+        self.weights = (np.random.rand(inputs + 1) * 2) - 1
 
         # Xavier initialization for sigmoid
         #limit = np.sqrt(6 / (inputs + 1))
         #self.weights = np.random.uniform(-limit, limit, inputs + 1)
 
         #He initialization
-        stddev = np.sqrt( 2 / inputs + 1 )
-        self.weights = np.random.randn(inputs + 1) * stddev
+        #stddev = np.sqrt( 2 / inputs + 1 )
+        #self.weights = np.random.randn(inputs + 1) * stddev
+
         self.bias = bias
         self.activation_function = activation_function
 
@@ -97,13 +98,14 @@ class NeuralNetwork:
 
         for layer_index in reversed(range(len(self.network) - 1)):
             for neuron_index in range(len(self.network[layer_index])):
-                fwd_error = 0.0
                 neuron_output = self.values[layer_index][neuron_index]
-                for nxt_layer_neuron_index in range(len(self.network[layer_index + 1])):
-                    nxt_layer_input_weight = self.network[layer_index + 1][nxt_layer_neuron_index].weights[neuron_index]
-                    nxt_layer_neuron_error = self.d[layer_index + 1][nxt_layer_neuron_index]
-                    fwd_error += nxt_layer_input_weight * nxt_layer_neuron_error
-                    self.d[layer_index][neuron_index] = self.activation_function.derivative(neuron_output)  * fwd_error
+                downstream_gradient = sum(
+                    self.network[layer_index + 1][nxt_layer_neuron_index].weights[neuron_index] *
+                    self.d[layer_index + 1][nxt_layer_neuron_index]
+                    for nxt_layer_neuron_index in range(len(self.network[layer_index + 1]))
+                )
+                self.d[layer_index][neuron_index] = (
+                        self.activation_function.derivative(neuron_output) * downstream_gradient)
 
         for layer_index in range(len(self.network)):
             for neuron_index in range(len(self.network[layer_index])):
